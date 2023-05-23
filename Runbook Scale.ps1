@@ -1,16 +1,23 @@
 $errorActionPreference = "Stop"
-
-Write-Output "--- Connecting to Azure using MSI..."
-Connect-AzAccount -Identity
+try
+{
+   Write-Output "--- Connecting to Azure using MSI..."
+    Connect-AzAccount -Identity
+}
+catch {
+    Write-Error -Message $_.Exception
+    throw $_.Exception
+}
 
 Write-Output "--- Reading variables...."
-$rg = Get-AutomationVariable -Name 'rg-name'
-$servicePlan = Get-AutomationVariable -Name 'service-plan-name'
-$sk = Get-AutomationVariable -Name 'scale-down-sku'
+$resourceGroup = "rg-name"
+$appServicePlan = "appserviceplaname"
+$sku = "Tier"
+$WorkerSize = "Small/Medium/Larger"
 
-Write-Output "--- Processing '$servicePlan' App Service Plan..."
-$currentAppServicePlan = Get-AzAppServicePlan -ResourceGroupName $rg -Name $servicePlan
+Write-Output "--- Processing '$appServicePlan' App Service Plan..."
 
-Write-Output "--- Converting '$servicePlan' to '$sk'..."
-Set-AzAppServicePlan -ResourceGroupName $rg -Name $servicePlan -Tier $sk
+Write-Output "--- Converting '$servicePlan' to '$sku'..."
+Set-AzAppServicePlan -Name $appServicePlan -ResourceGroupName $resourceGroup -Tier $sku -WorkerSize $WorkerSize
 Write-Output "--- Done!'"
+
