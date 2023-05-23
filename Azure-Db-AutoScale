@@ -1,0 +1,27 @@
+$errorActionPreference = "Stop"
+try
+{
+   Write-Output "--- Connecting to Azure using MSI..."
+    Connect-AzAccount -Identity
+}
+catch {
+    Write-Error -Message $_.Exception
+    throw $_.Exception
+}
+
+Write-Output "--- Reading variables...."
+$resourceGroup = "rg-name"
+$DatabaseName = "db-name"
+$ServerName = "sqlserver-name"
+$Edition = "Basic/Standard"
+$RequestedServiceObjectiveName = "-Tier for Standard Edition-"
+
+Set-AzSqlDatabase -ResourceGroup $resourceGroup -DatabaseName $DatabaseName  -ServerName $ServerName -Edition $Edition -RequestedServiceObjectiveName $RequestedServiceObjectiveName  
+
+
+Write-Output "--- Processing '$DatabaseName' Pricing Tier..."
+
+ 
+Write-Output "--- Done!'"
+
+
